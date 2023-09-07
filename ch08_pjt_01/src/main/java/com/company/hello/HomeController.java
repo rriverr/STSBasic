@@ -35,5 +35,4 @@ public class HomeController {
 		// 이 메서드는 View에서 필요한 정보를 return해야하므로 "home"을 반환.
 		// 이후 /WEB-INF/views/home.jsp 를 찾는 데 이용된다.
 	}
-	
 }
