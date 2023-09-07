@@ -20,5 +20,15 @@ public class MemberService {
 		memberDAO.insertMember(memberVO);
 		return 0;
 	}
-
+	
+	public MemberVO signInConfirm(MemberVO memberVO) {
+		System.out.println("[MemberService] signInConfirm()");
+		
+		System.out.println("m_id : " + memberVO.getM_id());
+		System.out.println("m_pw : " + memberVO.getM_pw());
+		
+		MemberVO signedInMember = memberDAO.selectMember(memberVO);
+		
+		return signedInMember;
+	}
 }
