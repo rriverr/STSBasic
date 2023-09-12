@@ -55,4 +55,13 @@ public class MemberController {
 			return "sign_in_ng";
 		}
 	}
+	
+	@RequestMapping("/logOut")
+	public String logOut() {
+		MemberVO memberVO = new MemberVO();
+		MemberVO signedInMember = memberService.signInConfirm(memberVO);
+		return "sign_in";
+	}
+	
+	
 }
