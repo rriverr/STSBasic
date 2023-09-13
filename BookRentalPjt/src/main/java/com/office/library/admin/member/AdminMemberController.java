@@ -1,5 +1,6 @@
 package com.office.library.admin.member;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +9,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/admin/member")
 public class AdminMemberController {
+	
+	@Autowired
+	AdminMemberService adminMemberService;
+	
 	@RequestMapping(value="/createAccountForm", method= RequestMethod.GET)
 	public String createAccountForm() {
 		System.out.println("[AdminMemberController] createAccountForm");
@@ -20,8 +25,13 @@ public class AdminMemberController {
 	// 리퀘스트 메서드를 GET으로 변경해서 다시 직접 접근하면 출력이 된다. 
 //	@RequestMapping(value = "/createAccountConfirm", method = RequestMethod.POST)
 	@PostMapping("/createAccountConfirm")
-	public String createAccountConfirm() {
+	public String createAccountConfirm(AdminMemberVO adminMemberVO) {
 		System.out.println("[AdminMemberController] createAccountConfirm");
-		return null;
+		int result = adminMemberService.createAccountConfirm(adminMemberVO);
+		String nextPage = "admin/member/create_account_ok";
+		if(result <= 0) {
+			nextPage = "admin/member/create_account_ng";
+		} 
+		return nextPage;
 	}
 }
