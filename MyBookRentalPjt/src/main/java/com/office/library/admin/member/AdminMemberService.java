@@ -11,10 +11,6 @@ public class AdminMemberService {
 	final static public int ADMIN_ACCOUNT_CREATE_SUCCESS = 1;
 	final static public int ADMIN_ACCOUNT_CREATE_FAIL = -1;
 
-	final static public int LOGIN_ALREADY_EXIST = 0;
-	final static public int LOGIN_SUCCESS = 1;
-	final static public int LOGIN_FAIL = -1;
-
 	@Autowired
 	AdminMemberDAO adminMemberDAO;
 
@@ -35,19 +31,12 @@ public class AdminMemberService {
 		}
 	}
 
-	public int loginConfirm(AdminMemberVO adminMemberVO) {
+	public AdminMemberVO loginConfirm(AdminMemberVO adminMemberVO) {
 		System.out.println("[AdminMemberService] loginConfirm()");
-		boolean isMember = adminMemberDAO.loginConfirm(adminMemberVO.getA_m_id());
-		if (!isMember) {
-			int result = adminMemberDAO.insertAdminAccount(adminMemberVO);
-			if (result > 0) {
-				return LOGIN_SUCCESS;
-			} else {
-				return LOGIN_FAIL;
-			}
-		} else {
-			return LOGIN_ALREADY_EXIST;
-		}
+		
+		AdminMemberVO loginedAdminMemberVO = adminMemberDAO.selectAdmin(adminMemberVO);
+		return loginedAdminMemberVO;
+		
 	}
 
 }

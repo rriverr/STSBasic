@@ -1,10 +1,13 @@
 package com.office.library.admin.member;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -93,7 +96,36 @@ public class AdminMemberDAO {
 		return result;
 	}
 
-	public boolean loginConfirm(String a_m_id) {
-		return true;
+	public AdminMemberVO selectAdmin(AdminMemberVO adminMemberVO) {
+		String sql = "SELECT * FROM tbl_admin_member WHERE a_m_id = ? ";
+		List<AdminMemberVO> adminMemberVOs = new ArrayList<AdminMemberVO>();
+		try {
+			adminMemberVOs = jdbcTemplate.query(sql, new RowMapper<AdminMemberVO>() {
+				@Override
+				public AdminMemberVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+					AdminMemberVO adminMemberVO = new AdminMemberVO();
+					adminMemberVO.setA_m_approval(rs.getInt("a_m_approval"));
+					adminMemberVO.setA_m_id(rs.getString("a_m_id"));
+					adminMemberVO.setA_m_pw(rs.getString("a_m_pw"));
+					adminMemberVO.setA_m_name(rs.getString("a_m_name"));
+					adminMemberVO.setA_m_gender(rs.getString("a_m_gender"));
+					adminMemberVO.setA_m_part(rs.getString("a_m_part"));
+					adminMemberVO.setA_m_position(rs.getString("a_m_position"));
+					adminMemberVO.setA_m_mail(rs.getString("a_m_mail"));
+					adminMemberVO.setA_m_phone(rs.getString("a_m_phone"));
+					adminMemberVO.setA_m_reg_date(rs.getString("a_m_reg_date"));
+					adminMemberVO.setA_m_mod_date(rs.getString("a_m_mod_date"));
+					return adminMemberVO;
+				}
+			}, adminMemberVO.getA_m_id());
+			
+			if(!passwordEncoder.matches(adminMemberVO.getA_m_pw(), adminMemberVOs.get(0).getA_m_pw())) {
+				adminMemberVOs.clear();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return adminMemberVOs.size() > 0 ? adminMemberVOs.get(0) : null;
 	}
 }

@@ -1,11 +1,16 @@
 package com.office.library.admin.member;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/admin/member")
@@ -38,23 +43,45 @@ public class AdminMemberController {
 
 	@GetMapping("/loginForm")
 	public String loginForm() {
+		System.out.println("[AdminMemberController] loginForm()");
 		String nextPage = "admin/member/login_form";
 		return nextPage;
 	}
 
-	@GetMapping("admin")
-	public String home() {
-		String nextPage = "admin/home";
-		return nextPage;
-	}
-
-	public String loginConfirm(AdminMemberVO adminMemberVO) {
+	@PostMapping("/loginConfirm")
+	public String loginConfirm(AdminMemberVO adminMemberVO, HttpSession session) {
 		System.out.println("[AdminMemberController] loginConfirm");
-		int result = adminMemberService.loginConfirm(adminMemberVO);
-		String nextPage = "admin/login_ok";
-		if (result <= 0) {
+		AdminMemberVO loginedMemberVO = adminMemberService.loginConfirm(adminMemberVO);
+		String nextPage = "admin/member/login_ok";
+		if(loginedMemberVO == null) {
 			nextPage = "admin/member/login_ng";
+		} else {
+			session.setAttribute("loginedAdminMemberVO", loginedMemberVO);
+			session.setMaxInactiveInterval(60*30);
+			// 서버의 session에 저장되는 값들은 브라우저의 쿠키에 JSESSIONID로 저장된다.
+			// session에 주입한 값들은 브라우저에선 확인할 수 없지만 난수화된 값 안에 저장은 되어있음.
 		}
 		return nextPage;
 	}
+	
+	@GetMapping("/logoutConfirm")
+	public String logoutConfirm(HttpSession session) {
+		System.out.println("[AdminMemberController] logoutConfirm()");
+		session.setAttribute("loginedAdminMemberVO", null);
+		session.setMaxInactiveInterval(0);
+		String nextPage = "redirect:/admin/member/loginForm";
+		return nextPage;
+	}
+	
+//	@GetMapping("/listupAdmin")
+//	public ModelAndView listupAdmin() {
+//		List<AdminMemberVO> adminMemberVOs = adminMemberService.listupAdmin();
+//		ModelAndView modelAndView = new ModelAndView();
+//		String nextPage = "admin/member/listup_admins";
+//		modelAndView.setViewName(nextPage);
+//		modelAndView.addObject(adminMemberVOs);
+//		return modelAndView;
+//	}
+	
+	
 }
