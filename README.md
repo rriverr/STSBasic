@@ -1,4 +1,4 @@
-## Spring Tool Suite 기초
+## Spring 기초
 
 - **ch~ : 수업**
   - ch07 ~ : sts setting, url mapping
