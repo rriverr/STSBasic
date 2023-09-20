@@ -91,14 +91,58 @@ public class AdminMemberController {
 
 		return modelAndView;
 	}
-	
+
 	@GetMapping("/setAdminApproval")
 	public String setAdminApproval(@RequestParam("a_m_no") int a_m_no) {
-								  //어떤 파라미터를 받아올 것인지 지정 
+		// 어떤 파라미터를 받아올 것인지 지정
 		String nextPage = "redirect:/admin/member/listupAdmin";
 		adminMemberService.setAdminApproval(a_m_no);
-		
+
 		return nextPage;
 	}
 
+	@GetMapping("/modifyAccountForm")
+	public String modifyAccountForm(HttpSession session) {
+		System.out.println("[AdminMemberController] modifyAccountForm()");
+		String nextPage = "admin/member/modify_account_form";
+		AdminMemberVO loginedAdminMemberVO = (AdminMemberVO) session.getAttribute("loginedAdminMemberVO");
+		if (loginedAdminMemberVO == null) {
+			nextPage = "redirect:/admin/member/loginForm";
+		}
+		return nextPage;
+	}
+
+	@PostMapping("/modifyAccountConfirm")
+	public String modifyAccountConfirm(AdminMemberVO adminMemberVO, HttpSession session) {
+		System.out.println("[AdminMemberController] modifyAccountConfirm()");
+		String nextPage = "admin/member/modify_account_ok";
+		int result = adminMemberService.modifyAccountConfirm(adminMemberVO);
+		if (result > 0) {
+			AdminMemberVO loginedAdminMemberVO = adminMemberService.getLoginedAdminMemberVO(adminMemberVO);
+			session.setAttribute("loginedAdminMemberVO", loginedAdminMemberVO);
+			session.setMaxInactiveInterval(60 * 30);
+		} else {
+			return nextPage = "admin/member/modify_account_ng";
+		}
+		return nextPage;
+	}
+
+	@RequestMapping("/findPasswordForm")
+	public String findPasswordForm() {
+		System.out.println("[AdminMemberController] findPasswordForm()");
+		String nextPage = "admin/member/find_password_form";
+		return nextPage;
+	}
+	
+	@PostMapping("/findPasswordConfirm")
+	public String findPasswordConfirm(AdminMemberVO adminMemberVO) {
+		System.out.println("[AdminMemberController] findPasswordConfirm()");
+		String nextPage="admin/member/find_password_ok";
+		int result = adminMemberService.findPasswordConfirm(adminMemberVO);
+		
+		if(result<=0) {
+			nextPage="admin/member/find_password_ng";
+		}
+		return nextPage;
+	}
 }

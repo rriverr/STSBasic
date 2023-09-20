@@ -31,8 +31,13 @@
 			</div>
 		
 			<div class="register_book_form">
-			
-				<form action="<c:url value='/book/admin/registerBookConfirm' />" name="register_book_form" method="post" enctype="multipart/form-data">
+				<form 
+					action="<c:url value='/book/admin/registerBookConfirm' />" 
+					name="register_book_form" 
+					method="post" 
+					enctype="multipart/form-data">
+					<!-- 이미지 파일 전송을 위해 multipart로 전달 -->
+					<!-- 한 번에 전송될 수 있는 양에 한계가 있기 때문에 여러개로 쪼개서 전송한다. -->
 					
 					<input type="text" name="b_name" placeholder="INPUT BOOK NAME."> <br>
 					<input type="text" name="b_author" placeholder="INPUT BOOK AUTHOR."> <br>
@@ -40,8 +45,8 @@
 					<input type="text" name="b_publish_year" placeholder="INPUT BOOK PUBLISH YEAR."> <br>
 					<input type="text" name="b_isbn" placeholder="INPUT BOOK ISBN."> <br>
 					<input type="text" name="b_call_number" placeholder="INPUT BOOK CALL NUMBER."> <br>
-					<select name="b_rantal_able">
-						<option value="">SELECT BOOK RANTAL ABLE.</option>
+					<select name="b_rental_able">
+						<option value="">SELECT BOOK RENTAL ABLE.</option>
 						<option value="0">UNABLE.</option>
 						<option value="1">ABLE.</option>
 					</select><br>

@@ -1,5 +1,6 @@
 package com.office.library.admin.member;
 
+
 public class AdminMemberVO {
 	int a_m_no;
 	int a_m_approval;
